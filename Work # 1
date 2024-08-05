@@ -1,0 +1,28 @@
+
+class Student:
+    def __init__(self, name, surname, gender):
+        self.surname = surname  # Фамилия
+        self.name = name  # Имя
+        self.gender = gender  # Мужской или женский
+        self.finished_courses = []  # Для завершенных курсов
+        self.course_progress = []  # Для пройденных курсов
+        self.grades = {}  # Для оценок
+
+
+class Mentors:
+    def __init__(self, name, surname):
+        self.name = name  # Имя
+        self.surname = surname  # Фамилия
+        self.courses_attached = []  # Для проводимых курсов
+
+
+class Lectors(Mentors):  # Лектор
+    def __init__(self, name, surname, courses_attached):
+        super().__init__(name, surname)
+        self.courses_attached = courses_attached
+
+
+class Reviewer(Mentors):  # Проверяющий
+    def __init__(self, name, surname, courses_attached):
+        super().__init__(name, surname)
+        self.courses_attached = courses_attached
