@@ -18,22 +18,23 @@ class Mentors:
 class Lectors(Mentors):  # Лектор
     def __init__(self, name, surname):
         super().__init__(name, surname)
-        self.courses_attached = []
+        self.courses_attached = []  # На каком курсе
 
-    def rate_hw(self, student, course, grade):
-        if isinstance(student, Student) and course in self.courses_attached and course in student.course_progress:
-            if course in student.grades:
-                student.grades[course] += [grade]
-            else:
-                student.grades[course] = [grade]
+    def rate_hw(self, student, course, grade):  # Для оценки лекций
+        if isinstance(student,
+                      Student) and course in self.courses_attached and course in student.course_progress:  # Студент должны быть на этом курсе
+            if course in student.grades:  # Если оценки есть
+                student.grades[course] += [grade]  # Добавляем оценку
+            else:  # Если оценок нет
+                student.grades[course] = [grade]  # Оценка добавляется в словарь
         else:
             return
 
 
 class Reviewer(Mentors):  # Проверяющий
-    def __init__(self, name, surname, courses_attached):
+    def __init__(self, name, surname):
         super().__init__(name, surname)
-        self.courses_attached = courses_attached
+        self.courses_attached = []  # На каком курсе
 
 
 student1 = Student("Алексей", "Алексеевич", "Мужской")
@@ -42,6 +43,7 @@ student2 = Student("Оля", "Александровна", "Женский")
 student2.course_progress += ["Java"]
 lector1 = Lectors("Иван", "Иванович")
 lector1.courses_attached += ["Python"]
-reviewer1 = Reviewer("Александр", "Александрович", "Java")
+reviewer1 = Reviewer("Александр", "Александрович")
+reviewer1.courses_attached += ["Java"]
 
 lector1.rate_hw(student1, "Python", 10)
