@@ -1,0 +1,103 @@
+class Student:
+    def __init__(self, name, surname, gender):
+        self.surname = surname  # Фамилия
+        self.name = name  # Имя
+        self.gender = gender  # Мужской или женский
+        self.finished_courses = []  # Для завершенных курсов
+        self.course_progress = []  # Для пройденных курсов
+        self.grades = {}  # Для оценок
+
+    def rate_lectors(self, lecturer, course, grade):  # Для оценки лекторов
+        if isinstance(lecturer,
+                      Lectors) and course in self.course_progress and course in lecturer.courses_attached:  # Лектор должен быть на этом курсе
+            print(f"Лектор {lecturer.name} {lecturer.surname} на курсе {course}")
+            if course in self.grades:  # Если оценки есть
+                self.grades[course] += [grade]  # Добавляем оценку
+                print(f"Оценка {grade} добавлена")
+            else:  # Если оценок нет
+                print(f"Оценок нет")
+                self.grades[course] = [grade]  # Добавляем оценку в словарь
+        else:
+            print(f"Лектора {lecturer.name} {lecturer.surname} нет на курсе {course}")
+            return
+
+    def readme_grade_student(self):
+        print(f"У студента {self.name} {self.surname} оценки: {self.grades}")
+
+    def __str__(self):
+        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {(self.grades)}\nКурсы в процессе изучения: {self.course_progress}\nЗавершенные курсы: {self.finished_courses}"
+
+    def __lt__(self, student):
+        return (self.grades) < (student.grades)
+
+
+class Mentors:
+    def __init__(self, name, surname):
+        self.name = name  # Имя
+        self.surname = surname  # Фамилия
+        self.courses_attached = []  # Для проводимых курсов
+
+
+class Lectors(Mentors, Student):  # Лектор
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.courses_attached = []  # На каком курсе
+        self.courses_grades = []  # Для оценок лекторам от студентов
+
+    def readme_grade_lectors(self):
+        print(f"У преподавателя {self.name} {self.surname} оценки: {self.courses_grades}")
+
+    def __str__(self):
+        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {(self.courses_grades)}"
+
+    def __lt__(self, lectors):
+        return (self.courses_grades) < (lectors.courses_grades)
+    
+
+class Reviewer(Mentors):  # Проверяющий
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.courses_attached = []  # На каком курсе
+
+    def rate_hw(self, student, course, grade):  # Для оценки за занятия
+        if isinstance(student,
+                      Student) and course in self.courses_attached and course in student.course_progress:  # Студент должны быть на этом курсе
+            print(f"Студент {student.name} {student.surname} на курсе {course}")
+            if course in student.grades:  # Если оценки есть
+                student.grades[course] += [grade]  # Добавляем оценку
+                print(f"Оценка {grade} добавлена")
+            else:  # Если оценок нет
+                print(f"Оценок нет")
+                student.grades[course] = [grade]  # Оценка добавляется в словарь
+        else:
+            print(f"Студента {student.name} {student.surname} нет на курсе {course}")
+            return
+
+    def __str__(self):
+        return f"Имя: {self.name}\nФамилия: {self.surname}"
+
+
+student1 = Student('Алексей', 'Алексеевич', 'M')
+student1.course_progress += ['Python']
+student2 = Student('Анна', 'Александровна', 'M')
+student2.course_progress += ["Python"]
+
+lecturer1 = Lectors('Пётр', 'Петрович')
+lecturer1.courses_attached += ['Python']
+lecturer2 = Lectors('Анна', 'Семенович')
+lecturer2.courses_attached += ['Python']
+
+reviewer1 = Reviewer('Олег', 'Олегович')
+reviewer1.courses_attached += ['Python']
+reviewer2 = Reviewer('Саша', 'Белый')
+reviewer2.courses_attached += ['Python']
+
+reviewer1.rate_hw(student1, 'Python', 10)
+reviewer1.rate_hw(student2, 'Python', 9)
+reviewer2.rate_hw(student1, 'Python', 10)
+reviewer2.rate_hw(student2, 'Python', 9)
+
+student1.rate_lectors(lecturer1, 'Python', 10)
+student1.rate_lectors(lecturer2, 'Python', 9)
+student2.rate_lectors(lecturer1, 'Python', 10)
+student2.rate_lectors(lecturer2, 'Python', 9)
