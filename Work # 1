@@ -1,49 +1,49 @@
 class Student:
     def __init__(self, name, surname, gender):
-        self.surname = surname  # Фамилия
-        self.name = name  # Имя
-        self.gender = gender  # Мужской или женский
-        self.finished_courses = []  # Для завершенных курсов
-        self.course_progress = []  # Для пройденных курсов
-        self.grades = {}  # Для оценок
+        self.name = name
+        self.surname = surname
+        self.gender = gender
+        self.finished_courses = []  # Завершенные курсы
+        self.courses_in_progress = []  # Курсы в процессе изучения
+        self.grades = {}  # Оценки за домашние задания
 
 
-class Mentors:
+class Mentor:
     def __init__(self, name, surname):
-        self.name = name  # Имя
-        self.surname = surname  # Фамилия
-        self.courses_attached = []  # Для проводимых курсов
+        self.name = name
+        self.surname = surname
+        self.courses_attached = []  # Курсы, на которые подписан преподаватель
 
 
-class Lectors(Mentors):  # Лектор
+class Lectors(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
-        self.courses_attached = []  # На каком курсе
+        pass
 
-    def rate_hw(self, student, course, grade):  # Для оценки лекций
-        if isinstance(student,
-                      Student) and course in self.courses_attached and course in student.course_progress:  # Студент должны быть на этом курсе
-            if course in student.grades:  # Если оценки есть
-                student.grades[course] += [grade]  # Добавляем оценку
-            else:  # Если оценок нет
-                student.grades[course] = [grade]  # Оценка добавляется в словарь
+
+class Reviewer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+
+    def rate_hw(self, student, course, grade):
+        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+            # Проверяем, существует ли студент, есть ли он на курсе преподавателя и есть ли он на курсе студента
+            if course in student.grades:
+                student.grades[course] += [grade]
+            else:
+                student.grades[course] = [grade]
         else:
-            return
+            print("Студент или курс не найден")
 
 
-class Reviewer(Mentors):  # Проверяющий
-    def __init__(self, name, surname):
-        super().__init__(name, surname)
-        self.courses_attached = []  # На каком курсе
+student1 = Student('Алексей', 'Алексеевич', 'Мужчина')
+student1.courses_in_progress += ['Python', 'Git']
 
+rewiewer1 = Reviewer("Иван", "Иванов")
+rewiewer1.courses_attached += ['Python']
 
-student1 = Student("Алексей", "Алексеевич", "Мужской")
-student1.course_progress += ["Python"]
-student2 = Student("Оля", "Александровна", "Женский")
-student2.course_progress += ["Java"]
-lector1 = Lectors("Иван", "Иванович")
-lector1.courses_attached += ["Python"]
-reviewer1 = Reviewer("Александр", "Александрович")
-reviewer1.courses_attached += ["Java"]
+rewiewer1.rate_hw(student1, "Python", 10)
+rewiewer1.rate_hw(student1, "Python", 9)
+rewiewer1.rate_hw(student1, "Python", 8)
 
-lector1.rate_hw(student1, "Python", 10)
+print(student1.grades)
