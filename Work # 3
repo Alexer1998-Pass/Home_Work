@@ -17,13 +17,14 @@ class Student:
             print("Лектор или курс не найден")
 
     def __str__(self):
-        s = self.grades["Python"] = sum(self.grades["Python"]) / len(self.grades["Python"])
-        return (f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задание: {round(s, 1)}\n"
+        s = sum(self.grades.get("Python", [])) / len(self.grades.get("Python", [1])) if self.grades.get("Python") else 0
+        return (f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашние задания: {round(s, 1)}\n"
                 f"Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\nЗавершенные курсы: "
                 f"{', '.join(self.finished_courses)}")
 
     def __lt__(self, student):
-        return self.grades["Python"] < student.grades["Python"]
+        return sum(self.grades.get("Python", [])) / len(self.grades.get("Python", [1])) < sum(
+            student.grades.get("Python", [])) / len(student.grades.get("Python", [1]))
 
 
 class Mentor:
@@ -40,7 +41,7 @@ class Lectors(Mentor):
         self.grades = {}
 
     def __str__(self):
-        b = sum(self.grades["Python"]) / len(self.grades["Python"])
+        b = sum(self.grades.get("Python", [])) / len(self.grades.get("Python", [1]))
         return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {round(b, 1)} "
 
     def __lt__(self, lectors):
@@ -86,7 +87,7 @@ reviewer1.courses_attached += ['Python']
 reviewer2 = Reviewer('Сергей', 'Сергеевич')
 reviewer2.courses_attached += ['Python']
 
-reviewer1.rate_hw(student1, 'Python', 8)
+reviewer1.rate_hw(student1, 'Python', 3)
 reviewer1.rate_hw(student1, 'Python', 6)
 reviewer1.rate_hw(student1, 'Python', 5)
 
@@ -111,12 +112,7 @@ if lector1 < lector2:
 else:
     print(f"У лектора {lector2.name} {lector2.surname} средняя оценка выше")
 
-# if student1 < student2:
-#     print(f"У студента {student1.name} {student1.surname} средняя оценка выше")
-# else:
-#     print(f"У студента {student2.name} {student2.surname} средняя оценка выше")
-
-print(student1.grades)
-print(student2.grades)
-print(lector1.grades)
-print(lector2.grades)
+if student1 < student2:
+    print(f"У студента {student1.name} {student1.surname} средняя оценка выше")
+else:
+    print(f"У студента {student2.name} {student2.surname} средняя оценка выше")
